@@ -6,8 +6,8 @@ const pool = mysql.createPool({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '123456',
-    database: 'pjk',
+    password: 'yourpassword',
+    database: 'yourdatabase',
     connectionLimit: 10,
     waitForConnections: true
 })
@@ -120,4 +120,5 @@ const server = http.createServer(async (req, res) => {
 const port = 80;
 server.listen(port, () => {
     console.log(`Listening on port ${port}`);
+
 })
