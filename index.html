@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,12 @@
     <style>
         body {
             background-color: #f1f1f1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
         .menu{
             display: flex;
@@ -24,12 +31,6 @@
             font-size: 20px;
             font-weight: bold;
         }
-        .arttitle{
-            padding: 7px;
-            padding-left: 20px;
-            font-size: 30px;
-            font-weight: bold;
-        }
         .menuLabel{
             padding: 13px;
             font-size: 15px;
@@ -40,6 +41,8 @@
             justify-content: start;
             width: 100%;
             height: auto;
+            margin-bottom: auto;
+            padding-top: 10px;
         }
         .news{
             display: flex;
@@ -50,41 +53,44 @@
             height: auto;
             margin: 20px;
             border-radius: 30px;
+            padding: 10px;
         }
         .articlelist{
             display: flex;
             flex-direction: column;
             justify-content: start;
-            width: 95%;
+            width: 75%;
             background-color: #ffffff;
             height: auto;
             margin: 20px;
             border-radius: 30px;
         }
-        .article p {
+        .article{
+            /*display: flex;
+            flex-direction: column;
+            */
+            justify-content: start;
+            width: 95%;
+            background-color: #ffffff;
+            height: auto;
+            padding: 10px;
+            border-radius: 30px;
+        }
+        .article button {
             margin: 0;
             line-height: 1.6;
             word-wrap: break-word;
             width: 100%;
+            background-color: white;
+            border-width: 0;
+            font-size: 20px;
         }
-        .articlemain{
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-            width: 95%;
-            background-color: #f0f0f0;
-            height: auto;
-            margin: 20px;
-            border-radius: 30px;
-            white-space: pre-line;
-            padding: 10px;
-        }
-        .articletitlecolumn{
-            height: auto;
+        .article button:hover{
+            margin: 0;
+            line-height: 1.6;
+            word-wrap: break-word;
             width: 100%;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
+            color: cornflowerblue;
         }
         .custom-hr {
             border: 0;              /* 移除默认边框 */
@@ -92,30 +98,37 @@
             background: linear-gradient(to right, transparent, #333, transparent); /* 渐变效果 */
             margin: 5px 0;         /* 上下边距 */
         }
-        .created_at{
-            padding-left: 20px;
+        .beian{
+            justify-self: center;
+            margin-top: auto;
+            padding-right: 20px;
         }
-
+        .beianrow{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            height: 50px;
+        }
     </style>
 </head>
 <body>
-<div class="menu">
-    <label class="title">wems.top</label>
-    <label class="menuLabel" onclick="jmpToHome()">首页</label>
-    <label class="menuLabel" onclick="jmpToArticle(-1)">文章</label>
-</div>
-<div class="main">
-    <div id="articlelist" class="articlelist">
-        <div id="articletitlecolumn" class="articletitlerow">
-            <p class="arttitle">{{title}}</p>
-            <p class="created_at">{{created_at}}</p>
+    <div class="menu">
+        <label class="title">wems.top</label>
+        <label class="menuLabel" onclick="jmpToHome()">首页</label>
+        <label class="menuLabel" onclick="jmpToArticle(-1)">文章</label>
+    </div>
+    <div class="main">
+        <div class="news">
+            <label>News:Wems.top正式自研</label>
         </div>
-        <hr class="custom-hr">
-        <div id="articlemain" class="articlelist">
-            <p class="articlemain">{{content}}</p>
+        <div id="articlelist" class="articlelist">
+
         </div>
     </div>
-</div>
+    <div class="beianrow">
+        <a href="https://github.com/zxcar999/wems.top" class="beian">github仓库</a>
+        <a href="https://beian.miit.gov.cn" class="beian">浙ICP备2026001155号-1</a>
+    </div>
 </body>
 <script>
     function jmpToHome(){
@@ -129,3 +142,37 @@
         }
     }
 </script>
+<script>
+    //onPageshow加载内容
+    let articleNum;
+    fetch('api/articleNum')
+        .then(res => res.text())
+        .then(articleN=>{
+            articleNum=articleN;
+            //console.log("N:"+articleN);
+            let arthtml='';
+            let cnt=0;
+            for(let i=1;i<=articleNum;i++){
+                fetch('api/articleTitle?id='+i)
+                    .then(res => res.json())
+                    .then(articleMain=>{
+                        arthtml+=`<div class="article"><button class="title" onclick="jmpToArticle(${articleMain.id})">${articleMain.title}</button><hr class="custom-hr"></div>`;
+                        //console.log(articleMain);
+                        cnt++;
+                        if(cnt==articleNum){
+                            document.getElementById('articlelist').innerHTML=arthtml;
+                        }
+                    })
+                    .catch(err=>{
+                        arthtml+=`<div class="article"><p>${err}</p></div>`;
+                        cnt++;
+                    })
+            }
+        })
+        .catch(err => {
+            document.getElementById('articles').innerHTML = `<label>${err}</label>`;
+        })
+
+
+</script>
+</html>
