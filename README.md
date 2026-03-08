@@ -1,2 +1,2 @@
 # wems.top
-A Blog (https://wems.top)
+A small but smart Blog (https://wems.top)  
