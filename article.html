@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>wems.top</title>
+    <!--link rel="stylesheet" href="./node_modules/katex/dist/katex.min.css"-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
     <link rel="icon" type="image/png" href="/icon.png" />
     <link rel="stylesheet" href="/style.css">
 </head>
@@ -14,14 +16,16 @@
     {{user}}
 </div>
 <div class="main">
-    <div class="newscolumn">
-        <div class="divider">
-            <label class="title">公告</label>
-        </div>
-        <label class="news">2026.2.9------wems.top正式运行</label>
-    </div>
     <div id="articlelist" class="articlelist">
-        <div class="divider"><label class="title">文章</label></div>
+        <div id="articletitlecolumn" class="articletitlerow">
+            <p class="arttitle">{{title}}</p>
+            <p class="created_at">{{created_at}}</p>
+            <p class="created_at">作者：{{author}}</p>
+        </div>
+        <hr class="custom-hr">
+        <div id="articlemain" class="articlemain">
+            <div class="article-content">{{content}}</div>
+        </div>
     </div>
 </div>
 <div class="beianrow">
@@ -33,18 +37,12 @@
     function jmpToHome(){
         window.location.href = "./";
     }
-    function jmpToLogin(){
-        window.location.href = "./login";
-    }
     function jmpToArticle(id){
         if(id==-1){
             window.location.href = "./article";
         }else{
             window.location.href = "./article?id="+id;
         }
-    }
-    function jmpToAdmin(){
-        window.location.href = "./admin";
     }
     function logout(){
         fetch('api/logout')
@@ -67,34 +65,4 @@
     }
 </script>
 <script>
-    //onPageshow加载内容
-    let articleNum;
-    fetch('/api/articles/list')
-        .then(res => res.json())
-        .then(articleN=>{
-            articleNum=articleN.length;
-            //console.log("N:"+articleN);
-            let arthtml='<div class="divider"><label class="title">文章</label></div>';
-            let cnt=0;
-            for(let i=0;i<articleN.length;i++){
-                fetch('/api/articleTitle?id='+articleN[i].id)
-                    .then(res => res.json())
-                    .then(articleMain=>{
-                        arthtml+=`<div class="article"><button class="title" onclick="jmpToArticle(${articleMain.id})">${articleMain.title}</button><hr class="custom-hr"></div>`;
-                        //console.log(articleMain);
-                        cnt++;
-                        if(cnt==articleNum){
-                            document.getElementById('articlelist').innerHTML=arthtml;
-                        }
-                    })
-                    .catch(err=>{
-                        arthtml+=`<div class="article"><p>${err}</p></div>`;
-                        cnt++;
-                    })
-            }
-        })
-        .catch(err => {
-            document.getElementById('articles').innerHTML = `<label>${err}</label>`;
-        })
 </script>
-</html>

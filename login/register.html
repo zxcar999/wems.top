@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wems.top-Register</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+</head>
+<style>
+    .login {
+        background-color: white;
+        height: 400px;
+        width: 400px;
+        text-align: center;
+        border: 4px outset cornflowerblue;
+        border-radius: 10px;
+        margin: 150px auto;
+    }
+    .login input {
+        border-radius: 10px;
+        margin: 0 auto;
+        padding-left: 8px;
+    }
+    .form-group {
+        margin-bottom: 16px;
+    }
+    button {
+        border-radius: 10px;
+        background-color: lightskyblue;
+        font-size: 16px;
+        width: 200px;
+    }
+</style>
+<body>
+<div class="login">
+    <h1>注册</h1>
+    <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" />
+    </div>
+    <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" />
+    </div>
+    <div class="form-group">
+        <label for="password">确认密码</label>
+        <input type="password" id="passwordCheck" name="passwordCheck" />
+    </div>
+    <div class="form-group">
+        <div class="cf-turnstile" data-sitekey="Your_Site_Key" data-callback="onCaptchaSuccess" data-theme="light"></div>
+        <!--Site TODO: 替换为你的 Secret Key-->
+    </div>
+    <button type="submit" onclick="register()">注册</button>
+</div>
+<div class="beianrow">
+    <a href="https://github.com/zxcar999/wems.top" class="beian">github仓库</a>
+    <a href="https://beian.miit.gov.cn" class="beian">浙ICP备2026001155号-1</a>
+</div>
+</body>
+<script>    let username, password;
+let turnstileToken = null;
+
+function onCaptchaSuccess(token) {
+    turnstileToken = token;
+}
+
+function register() {
+    if (!turnstileToken) {
+        alert("请先完成人机验证。");
+        return;
+    }
+
+    username = document.getElementById('username').value;
+    password = document.getElementById('password').value;
+    passwordCheck = document.getElementById('passwordCheck').value;
+    if (username.trim().length < 1) {
+        alert("用户名不能为空")
+        return;
+    } else if (password.trim().length < 1) {
+        alert("密码不能为空")
+        return;
+    } else if(passwordCheck.length<1){
+        alert("确认密码不能为空")
+        return;
+    } else if(!(password===passwordCheck)){
+        alert("确认密码错误")
+        return;
+    }
+
+    fetch('/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+            'cf-turnstile-response': turnstileToken
+        })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success === true) {
+                alert("注册成功");
+                window.location.href = '/';
+            } else {
+                alert(data.message);
+                if (data.message.includes('人机验证')) {
+                    turnstileToken = null;
+                    if (window.turnstileReset) {
+                        window.turnstileReset();
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('注册失败:', error);
+            alert('网络错误，请稍后重试');
+        })
+}
+
+</script>
+</html>

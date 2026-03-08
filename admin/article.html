@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wems.top-管理员</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="menu">
+    <label class="title">管理员</label>
+    <label class="menuLabel" onclick="jmpToHome()">首页</label>
+    <label class="menuLabel" onclick="jmpToArticle(-1)">文章</label>
+    {{user}}
+</div>
+
+<div class="main">
+    <div class="newscolumn">
+        <div class="divider">
+            <label class="title">管理员</label>
+        </div>
+        <label class="news" onclick="jmpToArticleAdmin()">文章管理</label>
+        <label class="news" onclick="jmpToUserAdmin()">用户管理</label>
+    </div>
+    <div id="articlelist" class="articlelist">
+        <div class="divider"><label class="title">文章</label></div><p onclick="add()">添加文章</p>
+    </div>
+</div>
+<div class="beianrow">
+    <a href="https://github.com/zxcar999/wems.top" class="beian">github仓库</a>
+    <a href="https://beian.miit.gov.cn" class="beian">浙ICP备2026001155号-1</a>
+</div>
+</body>
+<script>
+    function jmpToHome(){
+        window.location.href = "/";
+    }
+    function jmpToLogin(){
+        window.location.href = "/login";
+    }
+    function jmpToArticleAdmin(){
+        window.location.href = "/admin";
+    }
+    function jmpToUserAdmin(){
+        window.location.href = '/admin/user'
+    }
+    function jmpToLogin(){
+        window.location.href = "/login";
+    }
+    function del(id){
+        const result=confirm("确认删除吗？删除后不可恢复");
+        if(result){
+            fetch('/api/articledel',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    id:id
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success === true) {
+                        alert("删除成功");
+                        window.location.href='/admin'
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+        }
+    }
+    function add(){
+        let title;
+        title=prompt("文章标题");
+        if(!title){
+            return;
+        }
+        fetch('api/articleadd',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                title:title
+            })
+        })
+            .then(res=>res.json())
+            .then(result=>{
+                if(result.success){
+                    alert("添加成功");
+                    window.location.href='/admin';
+                }else{
+                    alert("添加失败");
+                }
+            })
+            .catch(Error=>{
+                alert("添加失败");
+            })
+    }
+    function logout(){
+        fetch('api/logout')
+            .then(res=>res.json())
+            .then(result=>{
+                if(result.success){
+                    alert("退出成功");
+                    window.location.href='/';
+                }else{
+                    alert("退出登录失败");
+                    document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                    window.location.href = "/";
+                }
+            })
+            .catch(Error=>{
+                alert("退出登录失败");
+                document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                window.location.href = "/";
+            })
+    }
+</script>
+<script>
+    //onPageshow加载内容
+    let articleNum;
+    fetch('/api/articles/list')
+        .then(res => res.json())
+        .then(articleN=>{
+            articleNum=articleN.length;
+            //console.log("N:"+articleN);
+            let arthtml='<div class="divider"><label class="title">文章</label></div><p onclick="add()">添加文章</p>';
+            let cnt=0;
+            for(let i=0;i<articleN.length;i++){
+                fetch('/api/articleTitle?id='+articleN[i].id)
+                    .then(res => res.json())
+                    .then(articleMain=>{
+                        arthtml+=`<div class="article"><a class="title" href="/admin/article/change?id=${articleMain.id}">${articleMain.title}</a><button class="title" onclick="del(${articleMain.id})">删除</button><hr class="custom-hr"></div>`;
+                        console.log(articleMain.id);
+                        cnt++;
+                        if(cnt==articleNum){
+                            document.getElementById('articlelist').innerHTML=arthtml;
+                        }
+
+                    })
+                    .catch(err=>{
+                        arthtml+=`<div class="article"><p>${err}</p></div>`;
+                        cnt++;
+                    })
+            }
+        })
+        .catch(err => {
+            document.getElementById('articlelist').innerHTML = `<label>${err}</label>`;
+        })
+</script>
+</html>

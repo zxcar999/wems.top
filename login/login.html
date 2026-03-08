@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wems.top-Login</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="stylesheet" href="/style.css">
+</head>
+<style>
+    .login {
+        background-color: white;
+        height: 500px;
+        width: 400px;
+        text-align: center;
+        border: 4px outset cornflowerblue;
+        border-radius: 10px;
+        margin: 150px auto;
+    }
+    .login input {
+        border-radius: 10px;
+        margin: 0 auto;
+        padding-left: 8px;
+    }
+    .form-group {
+        margin-bottom: 16px;
+    }
+    button {
+        border-radius: 10px;
+        background-color: lightskyblue;
+        font-size: 16px;
+        width: 200px;
+    }
+    .labelstyle {
+        font-size: 10px;
+    }
+    .labelstyle:hover {
+        font-size: 10px;
+        text-decoration: underline;
+    }
+</style>
+<body>
+<div class="login">
+    <h1 >登录</h1>
+    <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" />
+    </div>
+    <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" />
+    </div>
+    <button type="submit" onclick="login()">登录</button>
+    <div class="form-group">
+        <label class="labelstyle" onclick="createuser()" >注册用户</label>
+        <label class="labelstyle" onclick="findpassword()" >找回密码</label>
+    </div>
+</div>
+<div class="beianrow">
+    <a href="https://github.com/zxcar999/wems.top" class="beian">github仓库</a>
+    <a href="https://beian.miit.gov.cn" class="beian">浙ICP备2026001155号-1</a>
+</div>
+</body>
+<script>
+    let username, password;
+    function login() {
+        username = document.getElementById('username').value;
+        password = document.getElementById('password').value;
+        if (username.trim().length < 1) {
+            alert("用户名不能为空")
+            return;
+        } else if (password.trim().length < 1) {
+            alert("密码不能为空")
+            return;
+        }
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success === true) {
+                alert("登录成功");
+                window.location.href = '/';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    }
+    function findpassword() {
+        alert("请联系管理员")
+    }
+    function createuser() {
+        window.location.href='/register'
+    }
+</script>
+</html>

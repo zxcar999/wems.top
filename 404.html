@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wems.top</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="menu">
+    <label class="title">wems.top</label>
+    <label class="menuLabel" onclick="jmpToHome()">首页</label>
+    <label class="menuLabel" onclick="jmpToArticle(-1)">文章</label>
+</div>
+<h1>404 Not Found</h1>
+<div class="beianrow">
+    <a href="https://github.com/zxcar999/wems.top" class="beian">github仓库</a>
+    <a href="https://beian.miit.gov.cn" class="beian">浙ICP备2026001155号-1</a>
+</div>
+</body>
+<script>
+    function jmpToHome(){
+        window.location.href = "./";
+    }
+    function jmpToArticle(id){
+        if(id==-1){
+            window.location.href = "./article";
+        }else{
+            window.location.href = "./article?id="+id;
+        }
+    }
+</script>
+</html>

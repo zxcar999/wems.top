@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wems.top-管理员</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="menu">
+    <label class="title">管理员</label>
+    <label class="menuLabel" onclick="jmpToHome()">首页</label>
+    <label class="menuLabel" onclick="jmpToArticle(-1)">文章</label>
+    {{user}}
+</div>
+
+<div class="main">
+    <div class="newscolumn">
+        <div class="divider">
+            <label class="title">管理员</label>
+        </div>
+        <label class="news" onclick="jmpToArticleAdmin()">文章管理</label>
+        <label class="news" onclick="jmpToUserAdmin()">用户管理</label>
+    </div>
+    <div id="articlelist" class="articlelist">
+        <div class="divider"><label class="title">用户</label></div>
+    </div>
+</div>
+<div class="beianrow">
+    <a href="https://github.com/zxcar999/wems.top" class="beian">github仓库</a>
+    <a href="https://beian.miit.gov.cn" class="beian">浙ICP备2026001155号-1</a>
+</div>
+</body>
+<script>
+    function jmpToHome(){
+        window.location.href = "/";
+    }
+    function jmpToLogin(){
+        window.location.href = "/login";
+    }
+    function jmpToArticleAdmin(){
+        window.location.href = "/admin";
+    }
+    function jmpToUserAdmin(){
+        window.location.href = '/admin/user'
+    }
+    function jmpToLogin(){
+        window.location.href = "/login";
+    }
+    function jmpToArticle(id){
+        if(id==-1){
+            window.location.href = "/article";
+        }else{
+            window.location.href = "/article?id="+id;
+        }
+    }
+    function logout(){
+        fetch('api/logout')
+            .then(res=>res.json())
+            .then(result=>{
+                if(result.success){
+                    alert("退出成功");
+                    window.location.href='/';
+                }else{
+                    alert("退出登录失败");
+                    document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                    window.location.href = "/";
+                }
+            })
+            .catch(Error=>{
+                alert("退出登录失败");
+                document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                window.location.href = "/";
+            })
+    }
+    function roleUp(id){
+        const result=confirm("确认升级用户吗？");
+        if(result){
+            fetch('/api/roleup',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    id:id
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success === true) {
+                        alert("用户升级成功");
+                        window.location.href='/admin/user'
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+        }
+    }
+    function roleDown(id){
+        const result=confirm("确认降级用户吗？");
+        if(result){
+            fetch('/api/roledown',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    id:id
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success === true) {
+                        alert("用户降级成功");
+                        window.location.href='/admin/user'
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+        }
+    }
+</script>
+<script>
+    //onPageshow加载内容
+    let userNum;
+    fetch('/api/users/list')
+        .then(res => res.json())
+        .then(userN=>{
+            userNum=userN.length;
+            console.log("N:"+userN.length);
+            let arthtml='<div class="divider"><label class="title">用户</label></div>';
+            let cnt=0;
+            for(let i=0;i<userNum;i++){
+                fetch('/api/user?id='+userN[i].id)
+                    .then(res => res.json())
+                    .then(usermain=>{
+                        //console.log(usermain);
+                        if(usermain.username!='admin'){
+                            if(usermain.role=='admin'){
+                                arthtml+=`<div class="userlist"><p class="title"">${usermain.id}</p><p class="title"">${usermain.username}</p><p class="title"">${usermain.role}</p><p class="title"">${usermain.created_at}</p><button onclick="roleDown(${usermain.id})">降级</button><hr class="custom-hr"></div>`;
+                            }else{
+                                arthtml+=`<div class="userlist"><p class="title"">${usermain.id}</p><p class="title"">${usermain.username}</p><p class="title"">${usermain.role}</p><p class="title"">${usermain.created_at}</p><button onclick="roleUp(${usermain.id})">升级</button><hr class="custom-hr"></div>`;
+                            }
+                        }else{
+                            arthtml+=`<div class="userlist"><p class="title"">${usermain.id}</p><p class="title"">${usermain.username}</p><p class="title"">${usermain.role}</p><p class="title"">${usermain.created_at}</p><hr class="custom-hr"></div>`;
+                        }
+                        cnt++;
+                        if(cnt==userNum){
+                            document.getElementById('articlelist').innerHTML=arthtml;
+                        }
+                    })
+                    .catch(err=>{
+                        arthtml+=`<div class="article"><p>${err}</p></div>`;
+                        cnt++;
+                    })
+            }
+        })
+        .catch(err => {
+            document.getElementById('articlelist').innerHTML = `<label>${err}</label>`;
+        })
+</script>
+</html>

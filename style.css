@@ -1,0 +1,313 @@
+
+/* =========================================== */
+/* =========== KaTeX 数学公式样式 ============= */
+/* =========================================== */
+
+/* 块级公式容器 (如 $$...$$) */
+.katex-display {
+    margin: 1em 0 !important;
+    text-align: center !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    font-size: 1.2em !important;
+}
+
+/* 行内公式容器 (如 $...$) */
+.katex {
+    font-size: 1.2em !important;
+    direction: ltr !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    /* 确保行内公式在行中垂直居中 */
+    vertical-align: middle !important;
+    line-height: 1.2 !important;
+}
+
+/* 块级公式外层 div */
+div.katex-display {
+    display: block !important;
+    margin: 1em 0 !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+}
+
+/* 修复分数显示 */
+.katex .frac-line {
+    border-bottom: 1px solid currentColor !important;
+    min-width: 20px !important;
+}
+
+.katex .vertical-separator {
+    border-left: 1px solid currentColor !important;
+}
+
+/* 修复KaTeX内部结构显示 */
+.katex .katex-html {
+    display: inline-block !important;
+}
+
+.katex .base {
+    display: inline-block !important;
+    white-space: nowrap !important;
+}
+
+/* KaTeX显示修复 - 重点解决当前问题 */
+.article-content .katex {
+    font-size: 1.2em !important;
+    direction: ltr !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    line-height: 1.2 !important;
+}
+
+.article-content .katex-display {
+    margin: 1em 0 !important;
+    text-align: center !important;
+    overflow-x: auto !important;
+    display: block !important;
+}
+
+/* 隐藏MathML部分，只显示HTML渲染 */
+.katex-mathml {
+    display: none !important;
+}
+
+/* 确保分数正确显示 */
+.katex .frac-line {
+    border-bottom: 1px solid currentColor !important;
+    min-width: 20px !important;
+    margin: 0 2px !important;
+}
+
+/* 修复复杂的嵌套结构显示 */
+.katex .base {
+    display: inline-block !important;
+    white-space: nowrap !important;
+}
+
+.katex .strut {
+    display: inline-block !important;
+}
+
+
+
+
+/*主要部分*/
+body {
+    background: linear-gradient(to right, #c0e5ff, #f1f1f1); /* 渐变效果 */;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+.menu{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    background-color: #ffffff;
+    width: 100%;
+    height: 50px;
+    padding: 0px;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.title{
+    padding: 5px;
+    padding-left: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.menuLabel{
+    padding: 13px;
+    font-size: 15px;
+}
+.main{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 100%;
+    height: auto;
+    margin-bottom: auto;
+    padding-top: 10px;
+}
+.newscolumn{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 25%;
+    background-color: #ffffff;
+    height: auto;
+    margin: 20px;
+    border-radius: 30px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.articlelist{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 75%;
+    background-color: #ffffff;
+    height: auto;
+    margin: 20px;
+    border-radius: 30px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.news{
+    padding-left: 15px;
+}
+.article{
+    /*display: flex;
+    flex-direction: column;
+    */
+    justify-content: start;
+    width: 95%;
+    background-color: #ffffff;
+    height: auto;
+    padding: 10px;
+    border-radius: 30px;
+}
+.article button {
+    margin: 0;
+    line-height: 1.6;
+    word-wrap: break-word;
+    width: 100%;
+    background-color: white;
+    border-width: 0;
+    font-size: 20px;
+}
+.article button:hover{
+    margin: 0;
+    line-height: 1.6;
+    word-wrap: break-word;
+    width: 100%;
+    color: cornflowerblue;
+}
+.custom-hr {
+    border: 0;              /* 移除默认边框 */
+    height: 1px;            /* 分割线高度 */
+    background: linear-gradient(to right, transparent, #333, transparent); /* 渐变效果 */
+    margin: 5px 0;         /* 上下边距 */
+}
+.beian{
+    justify-self: center;
+    margin-top: auto;
+    padding-right: 20px;
+}
+.beianrow{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 50px;
+}
+.divider{
+    border: 0;              /* 移除默认边框 */
+    height: 35px;            /* 分割线高度 */
+    background: linear-gradient(to right, #c0e5ff, white); /* 渐变效果 */
+    margin: 5px;
+    border-radius: 25px;
+    justify-content: space-around;
+}
+.article p {
+    margin: 0;
+    line-height: 1.6;
+    word-wrap: break-word;
+    width: 100%;
+}
+.articlemain{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    background-color: #f0f0f0;
+    height: auto;
+    border-radius: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.created_at{
+    padding-left: 20px;
+}
+.arttitle{
+    padding: 7px;
+    padding-left: 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+.loginbutton{
+    margin-left: auto;
+    padding: 13px;
+    font-size: 15px;
+}
+.loginbutton2{
+    margin-left: 10px;
+    padding: 13px;
+    font-size: 15px;
+}
+.userlist{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 95%;
+    background-color: #ffffff;
+    height: auto;
+    padding: 10px;
+    border-radius: 30px;
+}
+.articlechange{
+    width: 95%;
+    background-color: #f0f0f0;
+    height: 400px;
+    margin: 20px;
+}
+
+
+/*KaTeX*/
+/* 文章内容容器 */
+/* 文章内容容器 */
+.article-content-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    background-color: #f0f0f0;
+    height: auto;
+    border-radius: 30px;
+    padding: 10px;
+    margin: 10px;
+}
+
+/* 文章内容主体 */
+.article-content {
+    line-height: 1.6;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+/* 代码块样式 */
+.article-content pre {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 16px 0;
+}
+
+.article-content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+a{
+    color: royalblue;
+}
+
+a:hover{
+    color: cornflowerblue;
+}

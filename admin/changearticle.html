@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wems.top</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="menu">
+    <label class="title">wems.top</label>
+    <label class="menuLabel" onclick="jmpToHome()">首页</label>
+    <label class="menuLabel" onclick="jmpToArticle(-1)">文章</label>
+    {{user}}
+</div>
+<div class="main">
+    <div id="articlelist" class="articlelist">
+        <div id="articletitlecolumn" class="articletitlerow">
+            <p id="id" class="arttitle">{{id}}</p>
+            {{title}}
+            <p class="created_at">{{created_at}}</p>
+            <p class="created_at">作者：{{author}}</p>
+        </div>
+        <hr class="custom-hr">
+        <div id="articlemain" class="articlemain">
+            {{content}}
+            <button onclick="save()">保存</button>
+        </div>
+    </div>
+</div>
+<div class="beianrow">
+    <a href="https://github.com/zxcar999/wems.top" class="beian">github仓库</a>
+    <a href="https://beian.miit.gov.cn" class="beian">浙ICP备2026001155号-1</a>
+</div>
+</body>
+<script>
+    function jmpToHome(){
+        window.location.href = "/";
+    }
+    function jmpToArticle(id){
+        if(id==-1){
+            window.location.href = "/article";
+        }else{
+            window.location.href = "/article?id="+id;
+        }
+    }
+    function logout(){
+        fetch('api/logout')
+            .then(res=>res.json())
+            .then(result=>{
+                if(result.success){
+                    alert("退出成功");
+                    window.location.href='/';
+                }else{
+                    alert("退出登录失败");
+                    document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                    window.location.href = "/";
+                }
+            })
+            .catch(Error=>{
+                alert("退出登录失败");
+                document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                window.location.href = "/";
+            })
+    }
+    function save(){
+        const id=document.getElementById("id").textContent;
+        const title=document.getElementById("title").value;
+        const content=document.getElementById("content").value;
+        fetch('/api/changearticle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                id:id,
+                title:title,
+                content:content
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success === true) {
+                    alert("修改成功");
+                    window.location.href = '/admin';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    }
+</script>
