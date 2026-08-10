@@ -64,7 +64,7 @@ const sanitizeHtml = require('sanitize-html');
 const sessions = new Map();
 const pool = mysql.createPool({
     host: 'localhost',
-    port: 3306,
+    port: your_SQL_port,
     user: 'root',
     password: 'your_database_root_password',
     database: 'your_database_name',
